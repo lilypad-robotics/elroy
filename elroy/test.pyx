@@ -12,10 +12,10 @@ from libcpp.vector cimport vector
 from libcpp.pair cimport pair
 
 import tqdm
-import vc_me.util as util
-cimport vc_me.util as util
-import vc_me.nn as nn
-cimport vc_me.nn as nn
+import elroy.util as util
+cimport elroy.util as util
+import elroy.nn as nn
+cimport elroy.nn as nn
 
 cdef Camera* camera = new Camera(1, 5, 320, 240);
 import time

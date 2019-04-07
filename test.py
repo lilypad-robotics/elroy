@@ -1,4 +1,4 @@
-import vc_me
-vc_me.test.main(
+import elroy
+elroy.test.main(
     "models/onnx/tiny_yolov2/engine.trt"
 )

@@ -1,8 +1,8 @@
 # distutils: sources = src/nn/onnx.cpp src/nn/network.cpp src/nn/util/gpu_allocator.cpp
 import numpy as np
 cimport numpy as np
-cimport vc_me.util as util
-from vc_me.opencv cimport Mat
+cimport elroy.util as util
+from elroy.opencv cimport Mat
 
 cdef ONNXNetwork* get_model(str model_path, uint32_t max_batch_size):
     return new ONNXNetwork(model_path.encode('ascii'), max_batch_size)
