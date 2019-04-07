@@ -55,8 +55,8 @@ private:
     int init();
 public:
     NDArrayConverter();
-    cv::Mat toMat(const PyObject* o);
-    PyObject* toNDArray(const cv::Mat& mat);
+    cv::Mat to_mat(const PyObject* o);
+    PyObject* to_array(const cv::Mat& mat);
 };
 
 # endif

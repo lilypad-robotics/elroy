@@ -1,6 +1,6 @@
 from opencv cimport Mat
 
-cdef extern from "camera.h":
+cdef extern from "cv/camera.h":
     cdef cppclass Camera:
         Camera(int device)
         Camera(int device, int max_queue_size)

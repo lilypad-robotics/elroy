@@ -4,10 +4,11 @@ cimport numpy as np
 
 from opencv cimport Mat
 
-cdef extern from "ndarray_converter.h":
+cdef extern from "cv/ndarray_converter.h":
     cdef cppclass NDArrayConverter:
-        bool toMat(PyObject* o, Mat &m)
-        np.ndarray toNDArray(Mat& mat)
+        Mat to_mat(PyObject* o)
+        np.ndarray to_array(Mat mat)
 
 cdef NDArrayConverter* array_converter
-cdef np.ndarray get_array(Mat frame)
+cdef Mat to_mat(np.ndarray o)
+cdef np.ndarray to_array(Mat m)

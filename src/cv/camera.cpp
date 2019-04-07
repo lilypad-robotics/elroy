@@ -1,4 +1,4 @@
-#include "camera.h"
+#include "cv/camera.h"
 
 Camera::Camera(int device) : Camera(device, 50) { }
 
@@ -9,12 +9,14 @@ Camera::Camera(int device, unsigned int max_queue_size, unsigned int width, unsi
     this->cap = new cv::VideoCapture(this->device);
     this->max_queue_size = max_queue_size;
     this->recording = false;
+    this->started_recording = false;
     this->cap->set(CV_CAP_PROP_FRAME_WIDTH, width);
     this->cap->set(CV_CAP_PROP_FRAME_HEIGHT, height);
 }
 
 void Camera::capture() {
     cv::Mat frame;
+    this->started_recording = true;
     while (this->recording) {
         this->cap->read(frame);
 
@@ -29,6 +31,7 @@ void Camera::capture() {
             }
         }
     }
+    this->started_recording = false;
 }
 
 void Camera::start() {

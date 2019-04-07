@@ -1,9 +1,9 @@
-# distutils: sources = src/nn/ndarray_converter.cpp
+# distutils: sources = src/cv/ndarray_converter.cpp
 
 array_converter = new NDArrayConverter()
 
-cdef np.ndarray get_array(Mat frame):
-    return array_converter.toNDArray(frame)
+cdef np.ndarray to_array(Mat frame):
+    return array_converter.to_array(frame)
 
-def poop():
-    print("poop")
+cdef Mat to_mat(np.ndarray o):
+    return array_converter.to_mat(<PyObject*>o)

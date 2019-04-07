@@ -2,7 +2,7 @@
 #include <mutex>
 #include <thread>
 
-#include "common.h"
+#include "cv/common.h"
 
 cv::Mat test();
 
@@ -19,6 +19,7 @@ public:
 
 private:
     bool recording;
+    bool started_recording;
     int device;
     unsigned int max_queue_size;
     cv::VideoCapture* cap;

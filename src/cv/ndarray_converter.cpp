@@ -1,7 +1,7 @@
 // Author: Sudeep Pillai (spillai@csail.mit.edu)
 // Note: Stripped from Opencv (opencv/modules/python/src2/cv2.cpp)
 
-# include "ndarray_converter.h"
+# include "cv/ndarray_converter.h"
 /*
  * The following conversion functions are taken/adapted from OpenCV's cv2.cpp file
  * inside modules/python/src2 folder.
@@ -143,7 +143,7 @@ int NDArrayConverter::init()
     import_array();
 }
 
-cv::Mat NDArrayConverter::toMat(const PyObject *o)
+cv::Mat NDArrayConverter::to_mat(const PyObject *o)
 {
     cv::Mat m;
 
@@ -156,7 +156,7 @@ cv::Mat NDArrayConverter::toMat(const PyObject *o)
 
     if( !PyArray_Check(o) )
     {
-        failmsg("toMat: Object is not a numpy array");
+        failmsg("to_mat: Object is not a numpy array");
     }
 
     int typenum = PyArray_TYPE(o);
@@ -168,14 +168,14 @@ cv::Mat NDArrayConverter::toMat(const PyObject *o)
 
     if( type < 0 )
     {
-        failmsg("toMat: Data type = %d is not supported", typenum);
+        failmsg("to_mat: Data type = %d is not supported", typenum);
     }
 
     int ndims = PyArray_NDIM(o);
 
     if(ndims >= CV_MAX_DIM)
     {
-        failmsg("toMat: Dimensionality (=%d) is too high", ndims);
+        failmsg("to_mat: Dimensionality (=%d) is too high", ndims);
     }
 
     int size[CV_MAX_DIM+1];
@@ -220,7 +220,7 @@ cv::Mat NDArrayConverter::toMat(const PyObject *o)
     
     if( ndims > 2)
     {
-        failmsg("toMat: Object has more than 2 dimensions");
+        failmsg("to_mat: Object has more than 2 dimensions");
     }
     
     m = Mat(ndims, size, type, PyArray_DATA(o), step);
@@ -243,7 +243,7 @@ cv::Mat NDArrayConverter::toMat(const PyObject *o)
     return m;
 }
 
-PyObject* NDArrayConverter::toNDArray(const cv::Mat& m)
+PyObject* NDArrayConverter::to_array(const cv::Mat& m)
 {
   if( !m.data )
         Py_RETURN_NONE;
