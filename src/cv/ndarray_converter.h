@@ -9,27 +9,9 @@
 #include <opencv2/core/core.hpp>
 #include <numpy/ndarrayobject.h>
 
-static PyObject* opencv_error = 0;
-
-static int failmsg(const char *fmt, ...);
-
 class PyAllowThreads;
 
 class PyEnsureGIL;
-
-#define ERRWRAP2(expr) \
-try \
-{ \
-    PyAllowThreads allowThreads; \
-    expr; \
-} \
-catch (const cv::Exception &e) \
-{ \
-    PyErr_SetString(opencv_error, e.what()); \
-    return 0; \
-}
-
-static PyObject* failmsgp(const char *fmt, ...);
 
 static size_t REFCOUNT_OFFSET = (size_t)&(((PyObject*)0)->ob_refcnt) +
     (0x12345678 != *(const size_t*)"\x78\x56\x34\x12\0\0\0\0\0")*sizeof(int);

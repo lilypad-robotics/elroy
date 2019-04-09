@@ -1,37 +1,34 @@
 #include "cv/camera.h"
 
-Camera::Camera(int device) : Camera(device, 50) { }
+Camera::Camera(int device) : Camera(device, 640, 480) { }
 
-Camera::Camera(int device, unsigned int max_queue_size) : Camera(device, 50, 640, 480) { }
-
-Camera::Camera(int device, unsigned int max_queue_size, unsigned int width, unsigned int height) { 
+Camera::Camera(int device, unsigned int width, unsigned int height) : current_frame(height, width, CV_8UC3) { 
     this->device = device;
-    this->cap = new cv::VideoCapture(this->device);
-    this->max_queue_size = max_queue_size;
+    this->width = width;
+    this->height = height;
+    this->cap = std::make_shared<cv::VideoCapture>(this->device);
     this->recording = false;
-    this->started_recording = false;
     this->cap->set(CV_CAP_PROP_FRAME_WIDTH, width);
     this->cap->set(CV_CAP_PROP_FRAME_HEIGHT, height);
 }
 
-void Camera::capture() {
-    cv::Mat frame;
-    this->started_recording = true;
-    while (this->recording) {
-        this->cap->read(frame);
+unsigned int Camera::get_width() {
+    return this->width;
+}
 
-        if (!frame.empty()) {
-            std::lock_guard<std::mutex> g(this->queue_mutex);
-            if (frame_queue.size() < max_queue_size) {
-                frame_queue.push(frame.clone());
-            }
-            else {
-                frame_queue.pop();
-                frame_queue.push(frame.clone());
-            }
-        }
+unsigned int Camera::get_height() {
+    return this->height;
+}
+
+void Camera::capture() {
+    while (this->recording) {
+        this->load_frame();
     }
-    this->started_recording = false;
+}
+
+void Camera::load_frame() {
+    std::unique_lock<std::shared_timed_mutex> lock(this->mutex, std::defer_lock);
+    this->cap->read(this->current_frame);
 }
 
 void Camera::start() {
@@ -45,12 +42,6 @@ void Camera::stop() {
 }
 
 cv::Mat Camera::read() {
-	{
-		std::lock_guard<std::mutex> g(queue_mutex);
-		if (!frame_queue.empty()){
-			current_frame = frame_queue.front();
-			frame_queue.pop();
-		}
-	}
-    return current_frame;
+    std::shared_lock<std::shared_timed_mutex> lock(this->mutex, std::defer_lock);
+    return this->current_frame.clone();
 }

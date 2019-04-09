@@ -1,3 +1,6 @@
+#ifndef NN_LOG_H
+#define NN_LOG_H
+
 #include <iostream>
 #include "glog/logging.h"
 #include "NvInfer.h"
@@ -14,3 +17,5 @@ public:
             std::cout << msg << std::endl;
     }
 };
+
+#endif

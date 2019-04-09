@@ -1,4 +1,7 @@
-#include<vector>
+#ifndef NN_ONNX_H
+#define NN_ONNX_H
+
+#include <vector>
 #include "NvOnnxParser.h"
 #include "NvOnnxParserRuntime.h"
 
@@ -28,3 +31,5 @@ class ONNXNetwork : public NeuralNetwork {
         nvinfer1::DimsCHW output_dim;
         cv::Size input_cv_size;
 };
+
+#endif

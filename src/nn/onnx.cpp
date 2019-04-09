@@ -90,19 +90,18 @@ void ONNXNetwork::wrap_input_layer(std::vector<GpuMat>* input_channels) {
 }
 
 cv::Mat ONNXNetwork::preprocess(const Mat& img, std::vector<GpuMat>* input_channels) {
-    int c = this->input_dim.c();
     int w = this->input_dim.w();
     int h = this->input_dim.h();
 
     // Switching color order in channels
-    //cv::Mat rgb;
-    //cv::cvtColor(img, rgb, CV_BGR2RGB);
+    cv::Mat rgb;
+    cv::cvtColor(img, rgb, CV_BGR2RGB);
 
     // Resizing image
     cv::Mat resized;
     float scale = min(float(w)/img.cols,float(h)/img.rows);
     cv::Size scale_size = cv::Size(img.cols * scale, img.rows * scale);
-    cv::resize(img, resized, scale_size);
+    cv::resize(rgb, resized, scale_size);
     //cv::resize(img, resized, this->input_cv_size);
 
     // Cropping image

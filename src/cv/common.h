@@ -1,5 +1,5 @@
-#ifndef _TRT_COMMON_H_
-#define _TRT_COMMON_H_
+#ifndef _CV_COMMON_H_
+#define _CV_COMMON_H_
 
 #include "NvInfer.h"
 #include <string>

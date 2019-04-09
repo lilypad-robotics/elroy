@@ -16,10 +16,10 @@ def softmax(x, axis=-1):
 cdef class BoundingBox:
     def __init__(self, left, top, right, bottom,
                 box_score, class_score, score, class_id):
-        self.left = int(416 * left)
-        self.top = int(416 * top)
-        self.right = int(416 * right)
-        self.bottom = int(416 * bottom)
+        self.left = left
+        self.top = top
+        self.right = right
+        self.bottom = bottom
 
         self.box_score = box_score
         self.class_score = class_score
@@ -35,10 +35,15 @@ x, y = np.meshgrid(range(13), range(13))
 x = np.tile(x, [5, 1, 1]).reshape(-1)
 y = np.tile(y, [5, 1, 1]).reshape(-1)
 
-cdef list get_bounding_boxes(vector[float] features):
+cdef list get_bounding_boxes(vector[float] features,
+                            float detection_threshold=0.2,
+                            float nms_threshold=0.2):
     cdef:
         np.ndarray results_tensor
         np.ndarray left, right, width, height
+        np.ndarray confidence, class_probs, best_class, best_prob
+        np.ndarray total_confidence
+        np.ndarray best
         list results
     results_tensor = util.to_array(Mat(features)).reshape([5, 25, 13, 13]).swapaxes(0, 1)
 
@@ -47,7 +52,7 @@ cdef list get_bounding_boxes(vector[float] features):
     best_class = class_probs.argmax(axis=0)
     best_prob = class_probs[best_class, np.arange(845)]
     total_confidence = best_prob * confidence
-    best = total_confidence > 0.2
+    best = total_confidence > detection_threshold
 
     best_class = best_class[best]
     total_confidence = total_confidence[best]
@@ -69,7 +74,7 @@ cdef list get_bounding_boxes(vector[float] features):
                                    confidence[i], best_prob[i],
                                    total_confidence[i], best_class[i]))
     results.sort(key=lambda x: x.score, reverse=True)
-    results = nms(results, 0.2)
+    results = nms(results, nms_threshold)
     return results
 
 cdef list nms(list bounding_boxes, float threshold):

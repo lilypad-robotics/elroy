@@ -1,3 +1,6 @@
+#ifndef NN_NETWORK_H
+#define NN_NETWORK_H
+
 #include <vector>
 #include <opencv2/core.hpp>
 
@@ -15,3 +18,5 @@ protected:
     ICudaEngine* engine;
     IExecutionContext* context;
 };
+
+#endif
